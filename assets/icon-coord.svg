@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- globe circle -->
+  <circle cx="24" cy="24" r="18" fill="none" stroke="#e8a0bf" stroke-width="1.8" opacity="0.6"/>
+  <!-- horizontal line (equator) -->
+  <ellipse cx="24" cy="24" rx="18" ry="6" fill="none" stroke="#e8a0bf" stroke-width="1.2" opacity="0.4"/>
+  <!-- vertical meridian -->
+  <ellipse cx="24" cy="24" rx="7" ry="18" fill="none" stroke="#e8a0bf" stroke-width="1.2" opacity="0.4"/>
+  <!-- conversion arrow -->
+  <line x1="32" y1="36" x2="42" y2="36" stroke="#8b6f5c" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  <polyline points="38,32 42,36 38,40" fill="none" stroke="#8b6f5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+</svg>

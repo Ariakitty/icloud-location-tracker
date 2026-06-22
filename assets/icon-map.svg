@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- location pin -->
+  <path d="M24,4 C16,4 10,10.5 10,18 C10,28 24,44 24,44 C24,44 38,28 38,18 C38,10.5 32,4 24,4 Z" fill="#e8a0bf" fill-opacity="0.3" stroke="#e8a0bf" stroke-width="1.8" opacity="0.7"/>
+  <!-- inner circle -->
+  <circle cx="24" cy="18" r="6" fill="none" stroke="#8b6f5c" stroke-width="1.8" opacity="0.7"/>
+  <!-- dot -->
+  <circle cx="24" cy="18" r="2.5" fill="#8b6f5c" opacity="0.6"/>
+  <!-- small radiating lines -->
+  <line x1="24" y1="8" x2="24" y2="5" stroke="#8b6f5c" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+  <line x1="32" y1="12" x2="34" y2="10" stroke="#8b6f5c" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+  <line x1="16" y1="12" x2="14" y2="10" stroke="#8b6f5c" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+</svg>

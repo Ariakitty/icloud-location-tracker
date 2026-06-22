@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- outer circle -->
+  <circle cx="24" cy="24" r="20" fill="none" stroke="#e8a0bf" stroke-width="2" opacity="0.6"/>
+  <!-- inner filled circle (heart dot) -->
+  <circle cx="24" cy="24" r="4" fill="#e8a0bf" opacity="0.5"/>
+  <!-- heartbeat/pulse line -->
+  <polyline points="4,24 14,24 17,24 19,14 21,34 23,18 25,30 27,24 31,24 34,24 44,24" fill="none" stroke="#8b6f5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+</svg>
