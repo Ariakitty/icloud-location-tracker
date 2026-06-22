@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e94560;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#533483;stop-opacity:0.3"/>
+    </linearGradient>
+    <radialGradient id="pulse1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e94560;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#e94560;stop-opacity:0"/>
+    </radialGradient>
+    <radialGradient id="pulse2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#e94560;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#e94560;stop-opacity:0"/>
+    </radialGradient>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid lines (subtle map feel) -->
+  <g opacity="0.06" stroke="#fff" stroke-width="0.5">
+    <line x1="0" y1="100" x2="1200" y2="100"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Decorative diagonal lines -->
+  <g opacity="0.04" stroke="#e94560" stroke-width="1">
+    <line x1="0" y1="630" x2="400" y2="0"/>
+    <line x1="200" y1="630" x2="600" y2="0"/>
+    <line x1="400" y1="630" x2="800" y2="0"/>
+    <line x1="600" y1="630" x2="1000" y2="0"/>
+    <line x1="800" y1="630" x2="1200" y2="0"/>
+  </g>
+
+  <!-- Scattered dots (stars/data points) -->
+  <g fill="#fff" opacity="0.15">
+    <circle cx="150" cy="120" r="1.5"/>
+    <circle cx="320" cy="80" r="1"/>
+    <circle cx="480" cy="180" r="1.5"/>
+    <circle cx="720" cy="90" r="1"/>
+    <circle cx="900" cy="150" r="1.5"/>
+    <circle cx="1050" cy="100" r="1"/>
+    <circle cx="100" cy="450" r="1"/>
+    <circle cx="280" cy="520" r="1.5"/>
+    <circle cx="950" cy="480" r="1"/>
+    <circle cx="1100" cy="400" r="1.5"/>
+    <circle cx="80" cy="280" r="1"/>
+    <circle cx="1150" cy="250" r="1"/>
+  </g>
+
+  <!-- Location pulse rings -->
+  <circle cx="850" cy="340" r="120" fill="url(#pulse2)"/>
+  <circle cx="850" cy="340" r="80" fill="url(#pulse1)"/>
+  <circle cx="850" cy="340" r="45" fill="none" stroke="#e94560" stroke-width="1" opacity="0.3"/>
+  <circle cx="850" cy="340" r="25" fill="none" stroke="#e94560" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Location pin -->
+  <g transform="translate(850, 310)" filter="softglow">
+    <path d="M0,-35 C-15,-35 -25,-22 -25,-10 C-25,8 0,30 0,30 C0,30 25,8 25,-10 C25,-22 15,-35 0,-35 Z" fill="#e94560"/>
+    <circle cx="0" cy="-12" r="9" fill="#1a1a2e"/>
+    <circle cx="0" cy="-12" r="5" fill="#e94560" opacity="0.6"/>
+  </g>
+
+  <!-- Connection lines from pin to data -->
+  <g stroke="#e94560" stroke-width="0.8" opacity="0.2" stroke-dasharray="4,4">
+    <line x1="830" y1="320" x2="650" y2="250"/>
+    <line x1="870" y1="350" x2="1000" y2="420"/>
+    <line x1="840" y1="360" x2="750" y2="460"/>
+  </g>
+
+  <!-- Small data nodes -->
+  <g filter="softglow">
+    <circle cx="650" cy="250" r="4" fill="#533483" stroke="#e94560" stroke-width="1" opacity="0.6"/>
+    <circle cx="1000" cy="420" r="4" fill="#533483" stroke="#e94560" stroke-width="1" opacity="0.6"/>
+    <circle cx="750" cy="460" r="4" fill="#533483" stroke="#e94560" stroke-width="1" opacity="0.6"/>
+  </g>
+
+  <!-- iPhone silhouette (minimal) -->
+  <g transform="translate(960, 200)" opacity="0.12">
+    <rect x="0" y="0" width="50" height="90" rx="10" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <line x1="15" y1="8" x2="35" y2="8" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="25" cy="78" r="4" fill="none" stroke="#fff" stroke-width="1"/>
+  </g>
+
+  <!-- Main title -->
+  <g filter="shadow">
+    <text x="80" y="240" font-family="'SF Pro Display', -apple-system, 'Helvetica Neue', sans-serif" font-size="56" font-weight="700" fill="#fff" letter-spacing="-1">
+      iCloud Location
+    </text>
+    <text x="80" y="310" font-family="'SF Pro Display', -apple-system, 'Helvetica Neue', sans-serif" font-size="56" font-weight="700" fill="#fff" letter-spacing="-1">
+      Tracker
+    </text>
+  </g>
+
+  <!-- Subtitle -->
+  <text x="84" y="360" font-family="'SF Pro Text', -apple-system, sans-serif" font-size="18" fill="#e94560" opacity="0.9" letter-spacing="0.5">
+    pyicloud + GCJ-02 + AMap Reverse Geocoding
+  </text>
+
+  <!-- Description line -->
+  <text x="84" y="395" font-family="'SF Pro Text', -apple-system, sans-serif" font-size="15" fill="#fff" opacity="0.45">
+    Real-time iPhone location tracking on your VPS
+  </text>
+
+  <!-- Feature tags -->
+  <g transform="translate(84, 430)">
+    <rect x="0" y="0" width="110" height="28" rx="14" fill="#e94560" opacity="0.15" stroke="#e94560" stroke-width="0.5" stroke-opacity="0.3"/>
+    <text x="55" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#e94560" text-anchor="middle" opacity="0.8">Daemon Mode</text>
+
+    <rect x="122" y="0" width="130" height="28" rx="14" fill="#533483" opacity="0.2" stroke="#533483" stroke-width="0.5" stroke-opacity="0.3"/>
+    <text x="187" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#a78bfa" text-anchor="middle" opacity="0.8">Named Places</text>
+
+    <rect x="264" y="0" width="100" height="28" rx="14" fill="#e94560" opacity="0.15" stroke="#e94560" stroke-width="0.5" stroke-opacity="0.3"/>
+    <text x="314" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#e94560" text-anchor="middle" opacity="0.8">Event Alert</text>
+
+    <rect x="376" y="0" width="90" height="28" rx="14" fill="#533483" opacity="0.2" stroke="#533483" stroke-width="0.5" stroke-opacity="0.3"/>
+    <text x="421" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#a78bfa" text-anchor="middle" opacity="0.8">Weather</text>
+  </g>
+
+  <!-- Bottom accent line -->
+  <rect x="80" y="595" width="200" height="3" rx="1.5" fill="#e94560" opacity="0.6"/>
+  <rect x="290" y="595" width="60" height="3" rx="1.5" fill="#533483" opacity="0.4"/>
+
+  <!-- Corner decoration -->
+  <g opacity="0.08">
+    <text x="1050" y="590" font-family="'SF Mono', monospace" font-size="11" fill="#fff">22.xxxx, 114.xxxx</text>
+  </g>
+</svg>

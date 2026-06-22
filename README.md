@@ -1,3 +1,5 @@
+![iCloud Location Tracker](assets/banner.svg)
+
 # iCloud Location Tracker
 
 用 pyicloud + 高德逆地理编码 + 常用地点检测，在 VPS 上搭建一个持久运行的 iPhone 定位追踪系统。
