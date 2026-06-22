@@ -5,80 +5,66 @@
 <h1 align="center">iCloud Location Tracker</h1>
 
 <p align="center">
-  <b>在 VPS 上持久运行的 iPhone 定位系统</b><br/>
-  <sub>pyicloud · GCJ-02 坐标转换 · 高德逆地理编码 · 常用地点检测 · 天气</sub>
+  在 VPS 上跑一个 Python daemon，每 10 分钟自动查一次 iPhone 位置<br/>
+  坐标转换 · 地址解析 · 常用地点识别 · 天气 · 事件推送
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/python-3.10+-blue?style=flat-square&logo=python&logoColor=white" alt="Python"/>
-  <img src="https://img.shields.io/badge/pyicloud-Find_My_iPhone-grey?style=flat-square&logo=apple&logoColor=white" alt="pyicloud"/>
-  <img src="https://img.shields.io/badge/AMap-逆地理编码-green?style=flat-square" alt="AMap"/>
-  <img src="https://img.shields.io/badge/license-MIT-pink?style=flat-square" alt="MIT"/>
+  <img src="https://img.shields.io/badge/python-3.10+-94B8C9?style=flat-square&logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/pyicloud-iCloud_API-C9928E?style=flat-square&logo=apple&logoColor=white"/>
+  <img src="https://img.shields.io/badge/AMap-逆地理编码-98D4BB?style=flat-square"/>
+  <img src="https://img.shields.io/badge/license-MIT-FDF5EF?style=flat-square"/>
 </p>
 
-<br/>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-## 这是什么
+<img src="assets/h-about.png" width="100%"/>
 
-每 10 分钟自动查一次 iPhone 的位置，把坐标翻译成可读地址，推送到你的后端。跑在 VPS 上，daemon 模式常驻，不需要反复登录 iCloud。
+用 [pyicloud](https://github.com/picklepete/pyicloud) 调 iCloud 的 Find My iPhone 接口拿到 iPhone 的 GPS 坐标，然后做几件事：转成中国地图能用的坐标、查出对应的地址和附近地标、判断在不在常用地点（家、学校之类的）、顺便查个天气，最后打包推送到你的后端。
 
-除了基本定位，还支持：
+整个东西跑在 VPS 上，是一个常驻进程，不需要反复登录，也不需要开 App。
 
-- **常用地点识别**：到家了、到学校了、离开了，自动推送通知
-- **远离警报**：离家超过设定距离时提醒
-- **实时天气**：顺手拿当前位置的天气
+<p align="center"><img src="assets/features.png" width="700"/></p>
 
-```
-iPhone
-    ↓  pyicloud（Find My iPhone API）
-VPS Daemon（Python 常驻进程）
-    ├── 坐标转换：WGS-84 → GCJ-02
-    ├── 高德 API：坐标 → 地址 + 附近地标
-    ├── Open-Meteo：坐标 → 天气
-    ├── 常用地点匹配 + 到达/离开事件
-    └── 推送到后端（HTTP POST）
-```
+<p align="center"><img src="assets/arch.png" width="700"/></p>
 
-<p align="center"><img src="assets/divider.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-## 快速开始
+<img src="assets/h-quickstart.png" width="100%"/>
 
-> 需要：一台 VPS、Python 3.10+、[高德开放平台](https://lbs.amap.com/) API Key（免费申请）。
+需要准备：一台 VPS、Python 3.10+、一个[高德开放平台](https://lbs.amap.com/) API Key（免费申请就行）。
 
 ```bash
-# 1. 安装依赖
 pip install pyicloud requests
+```
 
-# 2. 首次认证（交互式，需要输密码和 2FA 验证码）
+第一次跑需要输密码和 2FA 验证码，通过环境变量传密码进去：
+
+```bash
 ICLOUD_PW="你的密码" python3 -u geo-poll.py
+```
 
-# 3. 确认正常后 Ctrl+C，用 systemd 接管
+看到定位数据正常输出之后 `Ctrl+C`，然后交给 systemd：
+
+```bash
 sudo systemctl start geo-tracker
 sudo journalctl -u geo-tracker -f   # 看日志
 ```
 
+之后就不用管了，daemon 会自己保持登录态。
+
 > [!IMPORTANT]
-> 密码只在首次认证时使用，之后只存在进程内存中。**不要把密码写进文件。**
+> 密码只在第一次认证时用，之后只存在进程内存里，不会写到文件。
 
-<p align="center"><img src="assets/divider-gold.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-## 详细教程
+<img src="assets/h-session.png" width="100%"/>
 
-<br/>
+iCloud 的登录态（session token）有效期只有几个小时。如果用 cron 定时跑脚本，token 过期就得重新输密码和验证码，VPS 上没法这么搞。
 
-### <img src="assets/icon-daemon.png" width="28"/> iCloud 会话管理：daemon 模式
-
-pyicloud 登录后会拿到一个 session token，但这个 token 只有几个小时寿命。如果用 cron 定时跑脚本，token 过期就要重新输密码和验证码，在 VPS 上根本不现实。
-
-解决办法是 daemon 模式：进程常驻，`PyiCloudService` 实例一直活在内存里，再加一个心跳定时调用 API，iCloud 就不会让 session 过期。
-
-> [!TIP]
-> 简单理解：cron 是每次敲门都要重新验证身份，daemon 是进门之后一直待着，隔一会儿打个招呼就行。
+所以要用 daemon 模式：进程不退出，`PyiCloudService` 实例一直活在内存里。再加一个每 30 分钟的心跳请求（随便调个轻量 API 就行），iCloud 就不会让 session 过期。
 
 ```python
-from pyicloud import PyiCloudService
-import time
-
 api = PyiCloudService("your@apple.id", password, china_mainland=True)
 
 if api.requires_2fa:
@@ -88,112 +74,186 @@ if api.requires_2fa:
 last_keepalive = time.time()
 
 while True:
-    poll_location(api)  # 每 10 分钟查位置
+    poll_location(api)
 
-    # 每 30 分钟心跳保活
     if time.time() - last_keepalive > 1800:
-        list(api.devices)
+        list(api.devices)          # 心跳，告诉 iCloud 我还在
         last_keepalive = time.time()
 
     time.sleep(30)
 ```
 
-重启后可以尝试从本地缓存恢复 session，不需要密码：
+daemon 重启的时候，pyicloud 会尝试从本地缓存恢复 session（默认在 `/tmp/pyicloud/`），如果 token 还没过期就不用重新输密码：
 
 ```python
 def try_resume():
     api = PyiCloudService("your@apple.id", china_mainland=True)  # 不传密码
     if api.requires_2fa:
-        return None  # token 过期了
-    try:
-        list(api.devices)
-        return api
-    except:
-        return None
+        return None       # 过期了
+    list(api.devices)     # 试一下能不能用
+    return api
 ```
 
 > [!NOTE]
-> pyicloud 默认把 session 存在 `/tmp/pyicloud/`，有些系统重启时会清空 `/tmp`。建议指定 `cookie_directory` 到持久路径。
+> `/tmp` 在有些系统重启后会清空，session 就没了。可以在创建 `PyiCloudService` 时指定 `cookie_directory` 到一个不会被清的路径。
 
-<p align="center"><img src="assets/divider.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-### <img src="assets/icon-coord.png" width="28"/> 坐标转换：WGS-84 → GCJ-02
+<img src="assets/h-coord.png" width="100%"/>
 
-iCloud 返回的是 GPS 标准坐标（WGS-84），但中国所有地图服务用的是偏移过的坐标系 GCJ-02（"火星坐标系"）。不转换的话，拿 GPS 坐标去调高德 API，返回的地址会**偏 500 到 2000 米**。
+iCloud 返回的是标准 GPS 坐标（WGS-84），全世界通用。但中国所有地图服务（高德、腾讯、百度）用的是一套偏移过的坐标系 GCJ-02，也叫火星坐标系。
 
-转换算法的核心是对经纬度施加一组非线性偏移。有一个特别容易错的地方：
+不转的话，拿 GPS 坐标直接去查地址会**偏 500 到 2000 米**，而且不会报错，返回的 JSON 格式完全正常，就是内容不对。
+
+转换算法是公开的，对经纬度做一组非线性偏移。最关键的一步：
 
 ```python
-# 要先减去参考点坐标，再做后续计算
-x = lon - 105.0   # ← 很多网上版本漏了这步
+x = lon - 105.0    # 先减参考点
 y = lat - 35.0
 
-dlat = -100.0 + 2.0*x + 3.0*y + 0.2*y*y + 0.1*x*y + 0.2*math.sqrt(abs(x))
-# ... 后续三角函数偏移都基于 x 和 y
+# 后面的偏移计算全部基于 x 和 y，不是原始的 lon / lat
+dlat = -100.0 + 2.0*x + 3.0*y + 0.2*y*y + ...
+dlon = 300.0 + x + 2.0*y + 0.1*x*x + ...
 ```
 
-漏掉这步减法不会报错，但偏移方向完全错误。
+网上很多版本漏了这步减法，直接拿原始坐标算，结果偏移方向完全不对。改起来就一行的事，但排查起来很头疼，因为程序不会报错。
 
 > [!TIP]
-> **验证方法**：拿一个已知位置的 GPS 坐标转一次，然后在高德地图上搜转换后的坐标，看落点是否正确。
+> 验证方法：拿一个你知道确切位置的地点的 GPS 坐标转一下，然后去高德地图搜转换后的坐标，看落点对不对。
 
-<p align="center"><img src="assets/divider-gold.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-### <img src="assets/icon-map.png" width="28"/> 高德逆地理编码
+<img src="assets/h-geocode.png" width="100%"/>
 
-拿到 GCJ-02 坐标后，调高德的逆地理编码 API 可以把经纬度翻译成可读地址，同时获取附近的 POI（兴趣点）。
+拿到 GCJ-02 坐标之后就可以调高德的逆地理编码 API 了，把经纬度变成"XX 市 XX 区 XX 路"这种可读地址，还能拿到附近的地标（商场、学校、餐厅之类的）。
 
 ```python
-def amap_reverse(lat, lon):
-    gcj_lat, gcj_lon = wgs84_to_gcj02(lat, lon)
-    # ⚠️ 高德参数顺序：经度在前，纬度在后
-    url = f"...&location={gcj_lon},{gcj_lat}&extensions=all&radius=200"
-    data = requests.get(url).json()
-    pois = data["regeocode"]["pois"]
-    nearby = [p["name"] for p in pois if float(p.get("distance", 9999)) <= 500][:3]
-    return data["regeocode"]["formatted_address"], nearby
+gcj_lat, gcj_lon = wgs84_to_gcj02(lat, lon)
+
+# 高德参数顺序：经度在前，纬度在后（跟常规相反）
+url = f"...&location={gcj_lon},{gcj_lat}&extensions=all&radius=200"
+
+data = requests.get(url).json()
+address = data["regeocode"]["formatted_address"]
+pois = data["regeocode"]["pois"]
+nearby = [p["name"] for p in pois if float(p.get("distance", 9999)) <= 500][:3]
 ```
 
-两个容易踩的坑：
+两个容易踩的地方：
 
-- **参数顺序**：高德是 `经度,纬度`（lon,lat），跟常规的 `lat,lon` 相反，搞反了不报错但地址完全不对
-- **距离字段类型**：POI 的 `distance` 是字符串浮点数如 `"123.343"`，用 `int()` 解析会报错，要用 `float()`
+- `location` 参数是**经度在前纬度在后**，反了不会报错，但地址完全不对
+- POI 的 `distance` 字段是字符串浮点数（比如 `"123.343"`），不能用 `int()` 解析，要用 `float()`
 
-<p align="center"><img src="assets/divider.png" width="500"/></p>
+> [!NOTE]
+> 高德免费版每天 5000 次调用，10 分钟查一次一天才 144 次，完全够。`extensions=all` 才会返回 POI 列表，默认只返回地址。
 
-### <img src="assets/icon-place.png" width="28"/> 常用地点检测
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-预定义几个地点，每次查到位置后用 Haversine 公式算距离，判断是否在某个地点的半径范围内：
+<img src="assets/h-places.png" width="100%"/>
+
+光有坐标和地址还不够，很多时候你想知道的是"到家了吗""什么时候离开的学校"这种状态。
+
+做法是先定义一组常用地点：
 
 ```python
 PLACES = [
     {"name": "home",   "label": "家",   "lat": xx.xxxx, "lon": xxx.xxxx, "radius": 200},
     {"name": "school", "label": "学校", "lat": xx.xxxx, "lon": xxx.xxxx, "radius": 200},
+    {"name": "office", "label": "公司", "lat": xx.xxxx, "lon": xxx.xxxx, "radius": 300},
 ]
 ```
 
-在 daemon 内存里记住上一次的状态，跟当前对比就能检测事件：
+每次拿到坐标后用 Haversine 公式算和每个地点的距离，小于 radius 就算"在这个地方"。
 
-| 上次 | 这次 | 事件 |
+然后是事件检测，在内存里记住上一次在哪，跟这次比较：
+
+```python
+prev_place = None
+
+def detect_event(current_place, dist_home):
+    global prev_place
+    event = None
+
+    if current_place and current_place != prev_place:
+        event = "arrived_" + current_place      # 到了某个地方
+
+    elif not current_place and prev_place:
+        event = "left_" + prev_place             # 离开了某个地方
+
+    if not current_place and dist_home > 1000:
+        event = event or "far_from_home"         # 离家太远
+
+    prev_place = current_place
+    return event
+```
+
+| 上次状态 | 当前状态 | 触发事件 |
 |:---:|:---:|:---:|
 | 不在任何地点 | 在家 | `arrived_home` |
 | 在学校 | 不在任何地点 | `left_school` |
-| 离家 >1km | 不在任何地点 | `far_from_home` |
+| 不在任何地点 | 离家 >1km | `far_from_home` |
+
+**关于 radius 的选择**
+
+GPS 本身有 10~50 米的误差，室内或者建筑密集的地方可能更大。radius 设太小的话（比如 50 米），定位在边缘跳动会反复触发"到了/走了"。设太大（比如 1km）就失去意义了。200 米对住宅和学校来说比较合适，大型园区可以设到 300~500 米。
+
+**防抖**
+
+`far_from_home` 这个事件只触发一次。在 daemon 里加一个 flag，触发过之后就不再重复推送，直到回到某个常用地点或者回家才重置。不然每 10 分钟都会收到"你离家很远"的通知，很烦。
+
+<p align="center"><img src="assets/sep.png" width="120"/></p>
+
+<img src="assets/h-weather.png" width="100%"/>
+
+坐标都有了，查天气几乎零成本。[Open-Meteo](https://open-meteo.com/) 完全免费，不要 Key，直接传经纬度就行。
+
+注意它用的是 WGS-84 坐标，不用转 GCJ-02。只有中国地图 API 才需要转。
+
+<p align="center"><img src="assets/sep.png" width="120"/></p>
+
+<img src="assets/h-visual.png" width="100%"/>
+
+daemon 在后台默默跑着，但你可能想看到位置在地图上长什么样。一个最简单的做法是写一个 HTML 页面，用高德的 JS API 在地图上画点。
+
+```html
+<script src="https://webapi.amap.com/maps?v=2.0&key=YOUR_KEY"></script>
+<script>
+  const map = new AMap.Map('map', { zoom: 14 });
+
+  // 从你的后端拿最近的位置数据
+  fetch('/api/geo/latest')
+    .then(r => r.json())
+    .then(data => {
+      new AMap.Marker({
+        position: [data.lon, data.lat],  // GCJ-02 坐标
+        map: map
+      });
+      map.setCenter([data.lon, data.lat]);
+    });
+</script>
+```
+
+如果你想看历史轨迹，可以把每次查到的坐标存下来，然后用 `AMap.Polyline` 画一条线：
+
+```javascript
+const path = history.map(p => [p.lon, p.lat]);
+
+new AMap.Polyline({
+  path: path,
+  strokeColor: '#98D4BB',
+  strokeWeight: 4,
+  map: map
+});
+```
+
+也可以用不同颜色标注常用地点的范围（`AMap.Circle`），一眼就能看出人在不在某个地点附近。
 
 > [!TIP]
-> `radius` 建议设 200 米。GPS 有 10~50 米误差，设太小会在边缘反复触发事件，设太大会失去精度。
+> 高德 JS API 也是免费的，每天有额度限制但个人用完全够。显示的地图自动就是 GCJ-02 坐标系，不需要额外转换。
 
-<p align="center"><img src="assets/divider-gold.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-### <img src="assets/icon-weather.png" width="28"/> 天气
-
-用 [Open-Meteo](https://open-meteo.com/)，完全免费，不需要 Key，传经纬度就能拿到温度、湿度、风速。
-
-注意 Open-Meteo 用 WGS-84 坐标，**不需要转 GCJ-02**。只有中国地图服务才需要转。
-
-<p align="center"><img src="assets/divider.png" width="500"/></p>
-
-### <img src="assets/icon-gear.png" width="28"/> systemd 服务
+<img src="assets/h-systemd.png" width="100%"/>
 
 ```ini
 [Unit]
@@ -211,30 +271,33 @@ StandardError=journal
 WantedBy=multi-user.target
 ```
 
-- `-u`：关闭 Python 输出缓冲，日志实时出现在 journalctl 里
-- `Restart=no`：退出通常意味着 session 过期，需要人工重新认证，自动重启没用
-- 第一次必须手动跑（要输密码），之后再交给 systemd
+- `-u` 让 Python 不缓冲输出，`journalctl` 能实时看到日志
+- `Restart=no` 是因为退出通常意味着 session 过期，需要人工重新认证，自动重启也没用
+- 第一次必须手动跑（要输密码），跑通之后再交给 systemd
 
 ```bash
-ICLOUD_PW="你的密码" python3 -u /path/to/geo-poll.py  # 首次认证
-# Ctrl+C 后
-sudo systemctl daemon-reload && sudo systemctl start geo-tracker
-sudo systemctl enable geo-tracker  # 开机自启
+ICLOUD_PW="你的密码" python3 -u /path/to/geo-poll.py    # 手动认证
+# 看到定位输出后 Ctrl+C
+
+sudo systemctl daemon-reload
+sudo systemctl start geo-tracker
+sudo systemctl enable geo-tracker      # 开机自启
 ```
 
-<p align="center"><img src="assets/divider-gold.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
-## 常见问题
+<img src="assets/h-pitfalls.png" width="100%"/>
 
 | 问题 | 表现 | 原因 | 解决 |
 |:---|:---|:---|:---|
-| 坐标偏移 2km | 地址和附近地标全不对 | GCJ-02 转换时少了 `x = lon - 105` 的减法 | 确认算法里有减参考点这步 |
-| 地址完全不对 | 人在 A 城市，返回 B 城市 | 高德参数顺序反了，应该是 `lon,lat` | 经度在前纬度在后 |
-| `ValueError` 崩溃 | 解析 POI 距离时报错 | 距离是 `"123.343"` 字符串 | 用 `float()` 不要用 `int()` |
-| 每天要重新登录 | session 频繁过期 | cron 模式没有心跳保活 | 改 daemon + 30 分钟心跳 |
-| 重启后要重新认证 | session 文件丢失 | 默认存在 `/tmp`，重启被清空 | 指定持久化 `cookie_directory` |
+| 坐标偏了 2km | 地址和地标全不对 | GCJ-02 转换少了 `x = lon - 105` | 补上减法 |
+| 地址完全对不上 | 查出来是别的城市 | 高德参数顺序反了 | `lon,lat` 经度在前 |
+| `ValueError` 崩溃 | 解析 POI 距离报错 | distance 是 `"123.343"` 字符串 | 用 `float()` |
+| 每天要重新登录 | session 过期 | cron 没有心跳保活 | 改 daemon + 心跳 |
+| 重启后要重新认证 | session 丢了 | 默认存在 `/tmp` | 指定持久目录 |
+| 到家/离家反复触发 | GPS 在边缘跳动 | radius 太小 | 设到 200m 以上 |
 
-<p align="center"><img src="assets/divider.png" width="500"/></p>
+<p align="center"><img src="assets/sep.png" width="120"/></p>
 
 ## 依赖
 
@@ -242,16 +305,14 @@ sudo systemctl enable geo-tracker  # 开机自启
 |:---:|:---:|:---:|
 | Python 3.10+ | 运行环境 | |
 | [pyicloud](https://github.com/picklepete/pyicloud) | iCloud API | `pip install pyicloud` |
-| [高德开放平台](https://lbs.amap.com/) Key | 逆地理编码 | 免费，每天 5000 次 |
-| [Open-Meteo](https://open-meteo.com/) | 天气 | 免费，无需 Key |
+| [高德开放平台](https://lbs.amap.com/) Key | 逆地理编码 + 地图 | 免费申请 |
+| [Open-Meteo](https://open-meteo.com/) | 天气 | 免费，不要 Key |
 
-<br/>
+## 安全
 
-## 安全提示
-
-- 密码不要写进文件，通过环境变量传入
-- session 文件包含登录 token，保护文件权限（`chmod 700`）
-- 定位数据是敏感信息，传输链路要加密
+- 密码通过环境变量传入，不写文件
+- session 文件有登录 token，权限设好（`chmod 700`）
+- 定位数据是敏感信息，传输要加密
 
 ---
 
