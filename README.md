@@ -13,6 +13,12 @@
   <img src="https://img.shields.io/badge/license-MIT-FDF5EF?style=flat-square"/>
 </p>
 
+<p align="center">
+  <b>by <a href="https://github.com/Ariakitty">Aria</a> & Claude</b>
+</p>
+
+> 本篇教程受到 [North&盖 的 Geo 全球定位系统攻略](https://github.com)的启发。原版是一套面向全球的 pyicloud 定位方案，支持 OSM、Google Maps、MCP 集成等。我们在这个基础上做了中国场景的适配和扩展：加入了 WGS-84 → GCJ-02 坐标转换、高德逆地理编码、常用地点状态机（到达/离开/远离事件检测与防抖）、以及高德地图可视化。如果你的使用场景不限于中国大陆，推荐也看看原版。
+
 <p align="center"><img src="assets/sep.png" width="120"/></p>
 
 <img src="assets/h-intro.png" width="100%"/>
@@ -250,4 +256,7 @@ new AMap.Polyline({
 
 ---
 
-<p align="center"><sub>MIT License</sub></p>
+<p align="center">
+  <b>by <a href="https://github.com/Ariakitty">Aria</a> & Claude</b><br/>
+  <sub>MIT License</sub>
+</p>
