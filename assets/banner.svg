@@ -1,151 +1,249 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1a2e"/>
-      <stop offset="50%" style="stop-color:#16213e"/>
-      <stop offset="100%" style="stop-color:#0f3460"/>
+    <!-- Cream-to-warm-beige background gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf8f0"/>
+      <stop offset="40%" stop-color="#faf3e8"/>
+      <stop offset="100%" stop-color="#f3ead8"/>
     </linearGradient>
-    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#e94560;stop-opacity:0.6"/>
-      <stop offset="100%" style="stop-color:#533483;stop-opacity:0.3"/>
+
+    <!-- Soft pink gradient for the location pin -->
+    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e8a0bf"/>
+      <stop offset="100%" stop-color="#d4849e"/>
     </linearGradient>
-    <radialGradient id="pulse1" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#e94560;stop-opacity:0.4"/>
-      <stop offset="100%" style="stop-color:#e94560;stop-opacity:0"/>
-    </radialGradient>
-    <radialGradient id="pulse2" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#e94560;stop-opacity:0.2"/>
-      <stop offset="100%" style="stop-color:#e94560;stop-opacity:0"/>
-    </radialGradient>
-    <filter id="softglow">
-      <feGaussianBlur stdDeviation="2" result="blur"/>
+
+    <!-- Subtle gold accent gradient for decorative elements -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#c9a96e" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#c9a96e" stop-opacity="0.3"/>
+    </linearGradient>
+
+    <!-- Soft shadow filter -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+      <feOffset dx="0" dy="4" result="offsetBlur"/>
+      <feFlood flood-color="#8b6f5c" flood-opacity="0.12"/>
+      <feComposite in2="offsetBlur" operator="in"/>
       <feMerge>
-        <feMergeNode in="blur"/>
+        <feMergeNode/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.3"/>
+
+    <!-- Pin shadow -->
+    <filter id="pinShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="blur"/>
+      <feOffset dx="0" dy="3" result="offsetBlur"/>
+      <feFlood flood-color="#d4849e" flood-opacity="0.25"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Pill shadow -->
+    <filter id="pillShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feOffset dx="0" dy="2" result="offsetBlur"/>
+      <feFlood flood-color="#8b6f5c" flood-opacity="0.08"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
 
-  <!-- Grid lines (subtle map feel) -->
-  <g opacity="0.06" stroke="#fff" stroke-width="0.5">
-    <line x1="0" y1="100" x2="1200" y2="100"/>
-    <line x1="0" y1="200" x2="1200" y2="200"/>
-    <line x1="0" y1="300" x2="1200" y2="300"/>
-    <line x1="0" y1="400" x2="1200" y2="400"/>
-    <line x1="0" y1="500" x2="1200" y2="500"/>
-    <line x1="200" y1="0" x2="200" y2="630"/>
-    <line x1="400" y1="0" x2="400" y2="630"/>
-    <line x1="600" y1="0" x2="600" y2="630"/>
-    <line x1="800" y1="0" x2="800" y2="630"/>
-    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  <!-- Subtle texture: tiny dots pattern -->
+  <g opacity="0.03">
+    <circle cx="50" cy="50" r="1.5" fill="#8b6f5c"/>
+    <circle cx="100" cy="30" r="1.5" fill="#8b6f5c"/>
+    <circle cx="150" cy="60" r="1.5" fill="#8b6f5c"/>
+    <circle cx="200" cy="40" r="1.5" fill="#8b6f5c"/>
+    <circle cx="250" cy="70" r="1.5" fill="#8b6f5c"/>
+    <circle cx="300" cy="25" r="1.5" fill="#8b6f5c"/>
+    <circle cx="350" cy="55" r="1.5" fill="#8b6f5c"/>
+    <circle cx="400" cy="35" r="1.5" fill="#8b6f5c"/>
+    <circle cx="450" cy="65" r="1.5" fill="#8b6f5c"/>
+    <circle cx="500" cy="45" r="1.5" fill="#8b6f5c"/>
+    <circle cx="550" cy="28" r="1.5" fill="#8b6f5c"/>
+    <circle cx="600" cy="58" r="1.5" fill="#8b6f5c"/>
+    <circle cx="650" cy="38" r="1.5" fill="#8b6f5c"/>
+    <circle cx="700" cy="68" r="1.5" fill="#8b6f5c"/>
+    <circle cx="750" cy="48" r="1.5" fill="#8b6f5c"/>
+    <circle cx="800" cy="32" r="1.5" fill="#8b6f5c"/>
+    <circle cx="850" cy="62" r="1.5" fill="#8b6f5c"/>
+    <circle cx="900" cy="42" r="1.5" fill="#8b6f5c"/>
+    <circle cx="950" cy="72" r="1.5" fill="#8b6f5c"/>
+    <circle cx="1000" cy="52" r="1.5" fill="#8b6f5c"/>
+    <circle cx="1050" cy="35" r="1.5" fill="#8b6f5c"/>
+    <circle cx="1100" cy="65" r="1.5" fill="#8b6f5c"/>
+    <circle cx="1150" cy="45" r="1.5" fill="#8b6f5c"/>
   </g>
 
-  <!-- Decorative diagonal lines -->
-  <g opacity="0.04" stroke="#e94560" stroke-width="1">
-    <line x1="0" y1="630" x2="400" y2="0"/>
-    <line x1="200" y1="630" x2="600" y2="0"/>
-    <line x1="400" y1="630" x2="800" y2="0"/>
-    <line x1="600" y1="630" x2="1000" y2="0"/>
-    <line x1="800" y1="630" x2="1200" y2="0"/>
+  <!-- Decorative: soft dotted path lines suggesting routes -->
+  <!-- Path 1: gentle curve top-left area -->
+  <path d="M 80 180 Q 200 120 340 200 Q 480 280 520 220"
+        fill="none" stroke="#e8a0bf" stroke-width="2"
+        stroke-dasharray="6 8" opacity="0.3"/>
+  <!-- Small dots along path 1 -->
+  <circle cx="80" cy="180" r="3" fill="#e8a0bf" opacity="0.35"/>
+  <circle cx="180" cy="148" r="2.5" fill="#e8a0bf" opacity="0.25"/>
+  <circle cx="340" cy="200" r="3" fill="#e8a0bf" opacity="0.35"/>
+  <circle cx="440" cy="248" r="2.5" fill="#e8a0bf" opacity="0.25"/>
+
+  <!-- Path 2: gentle curve bottom-right area -->
+  <path d="M 700 480 Q 820 420 940 460 Q 1060 500 1140 440"
+        fill="none" stroke="#c9a96e" stroke-width="1.8"
+        stroke-dasharray="5 9" opacity="0.25"/>
+  <circle cx="700" cy="480" r="2.5" fill="#c9a96e" opacity="0.3"/>
+  <circle cx="820" cy="432" r="2" fill="#c9a96e" opacity="0.2"/>
+  <circle cx="940" cy="460" r="2.5" fill="#c9a96e" opacity="0.3"/>
+  <circle cx="1060" cy="488" r="2" fill="#c9a96e" opacity="0.2"/>
+  <circle cx="1140" cy="440" r="2.5" fill="#c9a96e" opacity="0.3"/>
+
+  <!-- Path 3: subtle connector line -->
+  <path d="M 160 500 Q 280 450 400 480 Q 500 505 560 470"
+        fill="none" stroke="#d4a89c" stroke-width="1.5"
+        stroke-dasharray="4 10" opacity="0.2"/>
+
+  <!-- Decorative corner flourishes -->
+  <!-- Top-left -->
+  <path d="M 40 40 L 40 80" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 40 40 L 80 40" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <!-- Top-right -->
+  <path d="M 1160 40 L 1160 80" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 1160 40 L 1120 40" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <!-- Bottom-left -->
+  <path d="M 40 590 L 40 550" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 40 590 L 80 590" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <!-- Bottom-right -->
+  <path d="M 1160 590 L 1160 550" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+  <path d="M 1160 590 L 1120 590" stroke="#c9a96e" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+
+  <!-- Thin decorative gold line -->
+  <line x1="200" y1="315" x2="1000" y2="315" stroke="url(#goldGrad)" stroke-width="1"/>
+
+  <!-- ===== LOCATION PIN ICON (right side) ===== -->
+  <g transform="translate(920, 110)" filter="url(#pinShadow)">
+    <!-- Pin body -->
+    <path d="M 0 -48 C -30 -48 -48 -28 -48 -8 C -48 24 0 68 0 68 C 0 68 48 24 48 -8 C 48 -28 30 -48 0 -48 Z"
+          fill="url(#pinGrad)" opacity="0.85"/>
+    <!-- Inner circle -->
+    <circle cx="0" cy="-10" r="18" fill="#fdf8f0" opacity="0.9"/>
+    <!-- Tiny inner dot -->
+    <circle cx="0" cy="-10" r="7" fill="#e8a0bf" opacity="0.6"/>
+
+    <!-- Concentric ripple rings around pin -->
+    <circle cx="0" cy="-10" r="60" fill="none" stroke="#e8a0bf" stroke-width="1" opacity="0.12"/>
+    <circle cx="0" cy="-10" r="80" fill="none" stroke="#e8a0bf" stroke-width="0.8" opacity="0.08"/>
+    <circle cx="0" cy="-10" r="100" fill="none" stroke="#e8a0bf" stroke-width="0.6" opacity="0.05"/>
   </g>
 
-  <!-- Scattered dots (stars/data points) -->
-  <g fill="#fff" opacity="0.15">
-    <circle cx="150" cy="120" r="1.5"/>
-    <circle cx="320" cy="80" r="1"/>
-    <circle cx="480" cy="180" r="1.5"/>
-    <circle cx="720" cy="90" r="1"/>
-    <circle cx="900" cy="150" r="1.5"/>
-    <circle cx="1050" cy="100" r="1"/>
-    <circle cx="100" cy="450" r="1"/>
-    <circle cx="280" cy="520" r="1.5"/>
-    <circle cx="950" cy="480" r="1"/>
-    <circle cx="1100" cy="400" r="1.5"/>
-    <circle cx="80" cy="280" r="1"/>
-    <circle cx="1150" cy="250" r="1"/>
+  <!-- Small secondary pin (decorative) -->
+  <g transform="translate(1060, 240) scale(0.4)" opacity="0.4">
+    <path d="M 0 -48 C -30 -48 -48 -28 -48 -8 C -48 24 0 68 0 68 C 0 68 48 24 48 -8 C 48 -28 30 -48 0 -48 Z"
+          fill="#d4849e"/>
+    <circle cx="0" cy="-10" r="16" fill="#fdf8f0" opacity="0.8"/>
   </g>
 
-  <!-- Location pulse rings -->
-  <circle cx="850" cy="340" r="120" fill="url(#pulse2)"/>
-  <circle cx="850" cy="340" r="80" fill="url(#pulse1)"/>
-  <circle cx="850" cy="340" r="45" fill="none" stroke="#e94560" stroke-width="1" opacity="0.3"/>
-  <circle cx="850" cy="340" r="25" fill="none" stroke="#e94560" stroke-width="1.5" opacity="0.5"/>
-
-  <!-- Location pin -->
-  <g transform="translate(850, 310)" filter="softglow">
-    <path d="M0,-35 C-15,-35 -25,-22 -25,-10 C-25,8 0,30 0,30 C0,30 25,8 25,-10 C25,-22 15,-35 0,-35 Z" fill="#e94560"/>
-    <circle cx="0" cy="-12" r="9" fill="#1a1a2e"/>
-    <circle cx="0" cy="-12" r="5" fill="#e94560" opacity="0.6"/>
+  <!-- Another tiny decorative pin -->
+  <g transform="translate(830, 230) scale(0.28)" opacity="0.3">
+    <path d="M 0 -48 C -30 -48 -48 -28 -48 -8 C -48 24 0 68 0 68 C 0 68 48 24 48 -8 C 48 -28 30 -48 0 -48 Z"
+          fill="#c9a96e"/>
+    <circle cx="0" cy="-10" r="16" fill="#fdf8f0" opacity="0.7"/>
   </g>
 
-  <!-- Connection lines from pin to data -->
-  <g stroke="#e94560" stroke-width="0.8" opacity="0.2" stroke-dasharray="4,4">
-    <line x1="830" y1="320" x2="650" y2="250"/>
-    <line x1="870" y1="350" x2="1000" y2="420"/>
-    <line x1="840" y1="360" x2="750" y2="460"/>
-  </g>
+  <!-- ===== TITLE ===== -->
+  <text x="120" y="200"
+        font-family="Georgia, 'Times New Roman', 'Noto Serif', serif"
+        font-size="52" font-weight="700" fill="#5a4a3a" letter-spacing="1">
+    iCloud Location Tracker
+  </text>
 
-  <!-- Small data nodes -->
-  <g filter="softglow">
-    <circle cx="650" cy="250" r="4" fill="#533483" stroke="#e94560" stroke-width="1" opacity="0.6"/>
-    <circle cx="1000" cy="420" r="4" fill="#533483" stroke="#e94560" stroke-width="1" opacity="0.6"/>
-    <circle cx="750" cy="460" r="4" fill="#533483" stroke="#e94560" stroke-width="1" opacity="0.6"/>
-  </g>
-
-  <!-- iPhone silhouette (minimal) -->
-  <g transform="translate(960, 200)" opacity="0.12">
-    <rect x="0" y="0" width="50" height="90" rx="10" fill="none" stroke="#fff" stroke-width="1.5"/>
-    <line x1="15" y1="8" x2="35" y2="8" stroke="#fff" stroke-width="1" stroke-linecap="round"/>
-    <circle cx="25" cy="78" r="4" fill="none" stroke="#fff" stroke-width="1"/>
-  </g>
-
-  <!-- Main title -->
-  <g filter="shadow">
-    <text x="80" y="240" font-family="'SF Pro Display', -apple-system, 'Helvetica Neue', sans-serif" font-size="56" font-weight="700" fill="#fff" letter-spacing="-1">
-      iCloud Location
-    </text>
-    <text x="80" y="310" font-family="'SF Pro Display', -apple-system, 'Helvetica Neue', sans-serif" font-size="56" font-weight="700" fill="#fff" letter-spacing="-1">
-      Tracker
-    </text>
-  </g>
-
-  <!-- Subtitle -->
-  <text x="84" y="360" font-family="'SF Pro Text', -apple-system, sans-serif" font-size="18" fill="#e94560" opacity="0.9" letter-spacing="0.5">
+  <!-- ===== SUBTITLE ===== -->
+  <text x="124" y="250"
+        font-family="'SF Mono', 'Fira Code', 'Courier New', monospace"
+        font-size="18" fill="#8b6f5c" letter-spacing="2" opacity="0.7">
     pyicloud + GCJ-02 + AMap Reverse Geocoding
   </text>
 
-  <!-- Description line -->
-  <text x="84" y="395" font-family="'SF Pro Text', -apple-system, sans-serif" font-size="15" fill="#fff" opacity="0.45">
+  <!-- ===== FEATURE PILLS ===== -->
+  <!-- Pill 1: Daemon Mode -->
+  <g filter="url(#pillShadow)">
+    <rect x="120" y="340" width="160" height="42" rx="21" fill="#fdf0f4" stroke="#e8a0bf" stroke-width="1.2"/>
+    <text x="200" y="366" text-anchor="middle"
+          font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif"
+          font-size="15" fill="#c47a95" font-weight="500">
+      Daemon Mode
+    </text>
+  </g>
+
+  <!-- Pill 2: Named Places -->
+  <g filter="url(#pillShadow)">
+    <rect x="300" y="340" width="170" height="42" rx="21" fill="#f7f0e6" stroke="#c9a96e" stroke-width="1.2"/>
+    <text x="385" y="366" text-anchor="middle"
+          font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif"
+          font-size="15" fill="#9e8555" font-weight="500">
+      Named Places
+    </text>
+  </g>
+
+  <!-- Pill 3: Event Alert -->
+  <g filter="url(#pillShadow)">
+    <rect x="490" y="340" width="152" height="42" rx="21" fill="#fdf0f4" stroke="#d4a89c" stroke-width="1.2"/>
+    <text x="566" y="366" text-anchor="middle"
+          font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif"
+          font-size="15" fill="#b87e73" font-weight="500">
+      Event Alert
+    </text>
+  </g>
+
+  <!-- Pill 4: Weather -->
+  <g filter="url(#pillShadow)">
+    <rect x="662" y="340" width="130" height="42" rx="21" fill="#f7f0e6" stroke="#c9a96e" stroke-width="1.2"/>
+    <text x="727" y="366" text-anchor="middle"
+          font-family="'Helvetica Neue', 'Segoe UI', Arial, sans-serif"
+          font-size="15" fill="#9e8555" font-weight="500">
+      Weather
+    </text>
+  </g>
+
+  <!-- ===== TAGLINE ===== -->
+  <text x="120" y="440"
+        font-family="Georgia, 'Times New Roman', 'Noto Serif', serif"
+        font-size="17" fill="#8b6f5c" font-style="italic" opacity="0.6" letter-spacing="0.5">
     Real-time iPhone location tracking on your VPS
   </text>
 
-  <!-- Feature tags -->
-  <g transform="translate(84, 430)">
-    <rect x="0" y="0" width="110" height="28" rx="14" fill="#e94560" opacity="0.15" stroke="#e94560" stroke-width="0.5" stroke-opacity="0.3"/>
-    <text x="55" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#e94560" text-anchor="middle" opacity="0.8">Daemon Mode</text>
+  <!-- Small decorative elements: floating dots -->
+  <circle cx="760" cy="160" r="4" fill="#e8a0bf" opacity="0.2"/>
+  <circle cx="790" cy="190" r="3" fill="#c9a96e" opacity="0.15"/>
+  <circle cx="820" cy="140" r="2.5" fill="#d4a89c" opacity="0.18"/>
+  <circle cx="770" cy="250" r="3.5" fill="#e8a0bf" opacity="0.12"/>
+  <circle cx="1100" cy="380" r="3" fill="#e8a0bf" opacity="0.15"/>
+  <circle cx="1130" cy="350" r="2" fill="#c9a96e" opacity="0.12"/>
+  <circle cx="1080" cy="420" r="2.5" fill="#d4a89c" opacity="0.1"/>
 
-    <rect x="122" y="0" width="130" height="28" rx="14" fill="#533483" opacity="0.2" stroke="#533483" stroke-width="0.5" stroke-opacity="0.3"/>
-    <text x="187" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#a78bfa" text-anchor="middle" opacity="0.8">Named Places</text>
+  <!-- Soft decorative arc (bottom area) -->
+  <path d="M 0 580 Q 300 530 600 560 Q 900 590 1200 550"
+        fill="none" stroke="#e8a0bf" stroke-width="1" opacity="0.1"/>
+  <path d="M 0 600 Q 400 560 700 580 Q 1000 600 1200 570"
+        fill="none" stroke="#c9a96e" stroke-width="0.8" opacity="0.08"/>
 
-    <rect x="264" y="0" width="100" height="28" rx="14" fill="#e94560" opacity="0.15" stroke="#e94560" stroke-width="0.5" stroke-opacity="0.3"/>
-    <text x="314" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#e94560" text-anchor="middle" opacity="0.8">Event Alert</text>
-
-    <rect x="376" y="0" width="90" height="28" rx="14" fill="#533483" opacity="0.2" stroke="#533483" stroke-width="0.5" stroke-opacity="0.3"/>
-    <text x="421" y="18" font-family="'SF Mono', monospace" font-size="11" fill="#a78bfa" text-anchor="middle" opacity="0.8">Weather</text>
+  <!-- Bottom-right: small heart-shaped pin accent -->
+  <g transform="translate(1100, 520)" opacity="0.15">
+    <path d="M 0 8 C 0 8 -12 -4 -12 -10 C -12 -16 -4 -18 0 -12 C 4 -18 12 -16 12 -10 C 12 -4 0 8 0 8 Z"
+          fill="#e8a0bf"/>
   </g>
 
-  <!-- Bottom accent line -->
-  <rect x="80" y="595" width="200" height="3" rx="1.5" fill="#e94560" opacity="0.6"/>
-  <rect x="290" y="595" width="60" height="3" rx="1.5" fill="#533483" opacity="0.4"/>
-
-  <!-- Corner decoration -->
-  <g opacity="0.08">
-    <text x="1050" y="590" font-family="'SF Mono', monospace" font-size="11" fill="#fff">22.xxxx, 114.xxxx</text>
-  </g>
+  <!-- Subtle inner border -->
+  <rect x="24" y="24" width="1152" height="582" rx="8"
+        fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.15"/>
 </svg>
